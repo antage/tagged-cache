@@ -46,6 +46,7 @@ module ActiveSupport
 
       def read_tag(key)
         instrument(:read_tag, key) do
+          key = expanded_tag(key)
           tag_value = @tag_store.read(key, :raw => true)
           if tag_value.nil? || tag_value.to_i.zero?
             new_value = Time.now.to_i
@@ -60,7 +61,7 @@ module ActiveSupport
       def read_tags(*keys)
         instrument(:read_tags, keys) do
           options = keys.extract_options! || {}
-          tag_names = keys.dup
+          tag_names = keys.map { |k| expanded_tag(k) }
           tags = @tag_store.read_multi(*(keys << options.merge(:raw => true)))
           (tag_names - tags.keys).each do |unknown_tag|
             tags[unknown_tag] = read_tag(unknown_tag)
@@ -71,6 +72,7 @@ module ActiveSupport
 
       def touch_tag(key)
         instrument(:touch_tag, key) do
+          key = expanded_tag(key)
           @tag_store.increment(key) || @tag_store.write(key, Time.now.to_i, :raw => true)
         end
       end
@@ -165,6 +167,14 @@ module ActiveSupport
         prefix = namespace.is_a?(Proc) ? namespace.call : namespace
         key = "#{prefix}:#{key}" if prefix
         key    
+      end
+      
+      def expanded_tag(tag)
+        if tag.respond_to?(:cache_tag)
+          tag = tag.cache_tag.to_s
+        else
+          tag.to_s
+        end
       end
     end
   end

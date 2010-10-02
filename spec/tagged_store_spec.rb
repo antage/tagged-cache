@@ -162,5 +162,24 @@ describe "TaggedStore" do
         end
       end
     end
+    
+    context "#touch_tag(object)" do
+      before(:each) do
+        @tag_value = @store.read_tag("tag1")
+      end
+      
+      it "should calculate tag name and increment it" do
+        obj = Object.new
+        module ObjectCacheTag
+          def cache_tag
+            "tag1"
+          end
+        end
+        obj.extend(ObjectCacheTag)
+        @store.touch_tag(obj)
+        @store.read_tag("tag1").should > @tag_value
+      end
+    end
+    
   end
 end

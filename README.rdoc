@@ -36,6 +36,28 @@ ActiveSupport cache adapter with tagged dependencies.
     value
   end
 
+  # any object with method 'cache_tag' can be used as tag name
+  class A
+    attr_accessor :id
+
+    def cache_tag
+      "class/A/#{id}"
+    end
+  end
+
+  cache.tagged_fetch("some cache path") do |entry|
+    obj1 = A.new
+    obj1.id = 1
+
+    obj2 = A.new
+    obj2.id = 2
+
+    entry.depends obj1
+    entry.depends obj2
+
+    [obj1, obj2]
+  end
+
 == REQUIREMENTS:
 
 * activesupport >= 3.0.0
