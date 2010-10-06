@@ -1,5 +1,4 @@
 require 'rspec'
-#require 'rspec/autorun'
 
 Rspec.configure do |c|
   c.mock_with :rspec

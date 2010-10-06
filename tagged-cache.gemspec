@@ -13,8 +13,4 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*.rb"]
 
   s.add_dependency "activesupport", ">= 3.0.0"
-
-  s.add_development_dependency "bundler", ">= 1.0.0"
-  s.add_development_dependency "rspec", ">= 2.0.0.beta.22"
-  s.add_development_dependency "autotest", ">= 4.0.0"
 end
