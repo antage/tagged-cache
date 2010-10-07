@@ -1,3 +1,7 @@
+=== 1.0.1
+
+  * Fixed bug: incorrect Hash#delete using to filter options.
+
 === 1.0.0 2010-10-06
 
   * Added ActiveSupport::Cache adapter.

@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require "active_support/core_ext/hash"
 
 module ActiveSupport
   module Cache
@@ -152,7 +153,7 @@ module ActiveSupport
           entry.extend(TaggedEntry)
           entry.depends = read_tags(*depends)
         end
-        @entity_store.send(:write_entry, key, entry, options.delete(:depends))
+        @entity_store.send(:write_entry, key, entry, options.except(:depends))
       end
       
       def delete_entry(key, options)
