@@ -1,3 +1,7 @@
+=== 1.0.2
+
+  * Fixed bug: TaggedStore#read_tags does not escape keys.
+
 === 1.0.1 2010-10-07
 
   * Fixed bug: incorrect Hash#delete using to filter options.

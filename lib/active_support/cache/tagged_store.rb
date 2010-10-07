@@ -62,9 +62,9 @@ module ActiveSupport
       def read_tags(*keys)
         instrument(:read_tags, keys) do
           options = keys.extract_options! || {}
-          tag_names = keys.map { |k| expanded_tag(k) }
+          keys = keys.map { |k| expanded_tag(k) }
           tags = @tag_store.read_multi(*(keys << options.merge(:raw => true)))
-          (tag_names - tags.keys).each do |unknown_tag|
+          (keys - tags.keys).each do |unknown_tag|
             tags[unknown_tag] = read_tag(unknown_tag)
           end
           tags
