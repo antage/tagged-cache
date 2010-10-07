@@ -1,5 +1,5 @@
 require "active_support/core_ext/integer/time"
-require "active_support/core_ext/hash"
+require "active_support/core_ext/hash/except"
 
 module ActiveSupport
   module Cache
@@ -61,9 +61,9 @@ module ActiveSupport
 
       def read_tags(*keys)
         instrument(:read_tags, keys) do
-          options = keys.extract_options! || {}
+          options = keys.extract_options!
           keys = keys.map { |k| expanded_tag(k) }
-          tags = @tag_store.read_multi(*(keys << options.merge(:raw => true)))
+          tags = @tag_store.read_multi(*keys)
           (keys - tags.keys).each do |unknown_tag|
             tags[unknown_tag] = read_tag(unknown_tag)
           end

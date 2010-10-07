@@ -1,3 +1,7 @@
+=== 1.0.3 2010-10-07
+
+  * Fixed bug: :raw => true option in #read_multi is unnecessary.
+
 === 1.0.2 2010-10-07
 
   * Fixed bug: TaggedStore#read_tags does not escape keys.
