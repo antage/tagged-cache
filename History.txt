@@ -1,4 +1,4 @@
-=== 1.0.1
+=== 1.0.1 2010-10-07
 
   * Fixed bug: incorrect Hash#delete using to filter options.
 
