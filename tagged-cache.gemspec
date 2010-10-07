@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "tagged-cache"
-  s.version = "1.0.2"
+  s.version = "1.0.3"
   s.platform = Gem::Platform::RUBY
   s.summary = "ActiveSupport cache adapter with tagged dependencies"
   s.authors = ["Anton Ageev"]
