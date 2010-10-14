@@ -1,3 +1,7 @@
+=== 1.0.4 2010-10-14
+
+  * Fixed bug: Dalli requires :raw => true option in #read_multi.
+
 === 1.0.3 2010-10-07
 
   * Fixed bug: :raw => true option in #read_multi is unnecessary.

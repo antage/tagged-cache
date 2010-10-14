@@ -63,7 +63,7 @@ module ActiveSupport
         instrument(:read_tags, keys) do
           options = keys.extract_options!
           keys = keys.map { |k| expanded_tag(k) }
-          tags = @tag_store.read_multi(*keys)
+          tags = @tag_store.read_multi(*(keys + [options.merge(:raw => true)]))
           (keys - tags.keys).each do |unknown_tag|
             tags[unknown_tag] = read_tag(unknown_tag)
           end
@@ -148,12 +148,12 @@ module ActiveSupport
       end
       
       def write_entry(key, entry, options)
-        depends = (options[:depends] || []).uniq
+        depends = (options.delete(:depends) || []).uniq
         unless depends.empty?
           entry.extend(TaggedEntry)
           entry.depends = read_tags(*depends)
         end
-        @entity_store.send(:write_entry, key, entry, options.except(:depends))
+        @entity_store.send(:write_entry, key, entry, options)
       end
       
       def delete_entry(key, options)
