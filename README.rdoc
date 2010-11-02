@@ -58,6 +58,44 @@ ActiveSupport cache adapter with tagged dependencies.
     [obj1, obj2]
   end
 
+=== RAILS EXAMPLE:
+
+  # config/environments/production.rb:
+  Rails3::Application.configure do
+  ...
+    config.cache_store = :tagged_store, { :tag_store => [:mem_cache_store, %w(localhost), { :namespace => "tags" }], :entity_store => [:mem_cache_store, %w(localhost), { :namespace => "entities" }] }
+  ...
+  end
+
+  # app/controller/samples_controller.rb:
+  class SamplesController < ApplicationController
+    # specify :depends using lambda
+    caches_action :show, :depends => lambda { |c|
+      c.instance_eval do
+        # @sample must respond to #cache_tag method
+        [@sample]
+      end
+    }
+
+    # specify :depends using method name
+    caches_action :index, :depends => :index_tags
+
+    def index
+      @samples = Sample.all
+    end
+
+    def show
+      @sample = Sample.find(params[:id])
+    end
+
+    private
+
+    def index_tags
+      # each element of @samples must respond to #cache_tag method
+      @samples
+    end
+  end
+
 == REQUIREMENTS:
 
 * activesupport >= 3.0.0
