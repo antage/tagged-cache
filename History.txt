@@ -1,3 +1,7 @@
+=== 1.1.1 2010-11-10
+
+  * Adjust expiring offset with invalid tags (:race_condition_ttl option doesn't work if (Time.now - expires_at) > race_condition_ttl).
+
 === 1.1.0 2010-11-02
 
   * TaggedCache supports ActionController#caches_action now.

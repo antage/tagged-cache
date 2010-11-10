@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require "active_support/time"
 require "active_support/core_ext/hash/except"
 
 module ActiveSupport
@@ -142,7 +142,7 @@ module ActiveSupport
         if entry.respond_to?(:depends) && entry.depends && !entry.depends.empty?
           tags = read_tags(*entry.depends.keys)
           valid = entry.depends.all? { |k, v| tags[k] == v }
-          entry.expires_at = (entry.created_at - 1.year) unless valid
+          entry.expires_at = 1.second.ago unless valid
         end
         entry
       end
