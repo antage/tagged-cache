@@ -65,7 +65,7 @@ describe "TaggedStore" do
       ["tag1", "tag2"].each do |tag_name|
         context "#{tag_name}" do
           subject { @tags[tag_name] }
-          it { should be_instance_of(Integer) }
+          it { should be_is_a(Integer) }
         end
       end
     end
@@ -80,7 +80,7 @@ describe "TaggedStore" do
           context tag_name do
             subject { @tags[tag_name] }
             it { should_not be_nil }
-            it { should be_instance_of(Integer) }
+            it { should be_is_a(Integer) }
           end
         end
       end
