@@ -1,4 +1,7 @@
-doc/*
-pkg/*
-Gemfile.lock
-.rvmrc
+/doc
+/pkg
+/.bundle
+/Gemfile.lock
+/.gems
+/.rvmrc
+/.ruby-version
