@@ -25,7 +25,7 @@ describe "TaggedStore" do
       @store ||= ActiveSupport::Cache.lookup_store :tagged_store, @options
       @store.clear
     end
-    
+
     context "#read_tag('abc')" do
       subject  { @store.read_tag("abc") }
 
@@ -53,7 +53,7 @@ describe "TaggedStore" do
 
       specify { @tags.should have_key("tag1") }
       specify { @tags.should have_key("tag2") }
-      
+
       it "should return tag1's value" do
         @tags["tag1"].should == @tag1_value
       end
@@ -69,13 +69,13 @@ describe "TaggedStore" do
         end
       end
     end
-    
+
     context "#read_tags('tagA', 'tagB')" do
       context "when 'tagA' and 'tagB' don't exist in cache" do
         before(:each) do
           @tags = @store.read_tags("tagA", "tagB")
         end
-        
+
         ["tagA", "tagB"].each do |tag_name|
           context tag_name do
             subject { @tags[tag_name] }
@@ -85,7 +85,7 @@ describe "TaggedStore" do
         end
       end
     end
-    
+
     context "#clear" do
       before(:each) do
         @tag_abc_value = @store.read_tag("abc")
@@ -93,25 +93,25 @@ describe "TaggedStore" do
         sleep 0.1
         @store.clear
       end
-      
+
       it "should clear store of entities" do
         @store.read("abc_entity").should be_nil
       end
-      
+
       it "should not touch any tags" do
         @store.read_tag("abc").should == @tag_abc_value
       end
     end
-    
+
     context "entity" do
       before(:each) do
         @store.write("abc", "test", :depends => ["tag1", "tag2"])
       end
-      
+
       it "should be read from cache when tags are untouched" do
         @store.read("abc").should == "test"
       end
-      
+
       ["tag1", "tag2"].each do |tag_name|
         it "should not be read from cache when '#{tag_name}' is touched" do
           @store.touch_tag(tag_name)
@@ -125,11 +125,11 @@ describe "TaggedStore" do
         @depends = ["tag1", "tag2"]
         @store.write("abc", true, :depends => @depends)
       end
-      
+
       it "should fetch value from cache when tags are untouched" do
         @store.fetch("abc", :depends => @depends) { false }.should be_true
       end
-      
+
       ["tag1", "tag2"].each do |tag_name|
         it "should fetch value from proc when '#{tag_name}' is touched" do
           @store.touch_tag(tag_name)
@@ -150,11 +150,11 @@ describe "TaggedStore" do
           end
         end
       end
-      
+
       it "should fetch value from cache when tags are untouched" do
         @store.read("abc").should == "value"
       end
-      
+
       ["tag1", "tag2"].each do |tag_name|
         it "should fetch value from proc when '#{tag_name}' is touched" do
           @store.touch_tag(tag_name)
@@ -162,12 +162,12 @@ describe "TaggedStore" do
         end
       end
     end
-    
+
     context "#touch_tag(object)" do
       before(:each) do
         @tag_value = @store.read_tag("tag1")
       end
-      
+
       it "should calculate tag name and increment it" do
         obj = Object.new
         module ObjectCacheTag
@@ -180,6 +180,6 @@ describe "TaggedStore" do
         @store.read_tag("tag1").should > @tag_value
       end
     end
-    
+
   end
 end

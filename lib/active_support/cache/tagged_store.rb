@@ -12,19 +12,19 @@ module ActiveSupport
         def initialize(initial)
           @tags = initial || []
         end
-        
+
         def tags
           @tags
         end
-        
+
         def depends(tag)
           @tags << tag
         end
-        
+
         def <<(tag)
           @tags << tag
         end
-        
+
         def concat(*args)
           if args.size == 1 && args.first.is_a?(Array)
             @tags.concat(args.first)
@@ -33,14 +33,14 @@ module ActiveSupport
           end
         end
       end
-      
+
       def initialize(options = nil)
         unless options && options[:tag_store] && options[:entity_store]
           raise ":tag_store and :entity_store options are required"
         else
           @tag_store = Cache.lookup_store(*options.delete(:tag_store))
           @entity_store = Cache.lookup_store(*options.delete(:entity_store))
-          
+
           @options = {}
         end
       end
@@ -77,7 +77,7 @@ module ActiveSupport
           @tag_store.increment(key) || @tag_store.write(key, Time.now.to_i, :raw => true)
         end
       end
-      
+
       def tagged_fetch(name, options = nil)
         if block_given?
           options = merged_options(options)
@@ -112,31 +112,31 @@ module ActiveSupport
           end
         else
           read(name, options)
-        end        
+        end
       end
-      
+
       def delete_matched(matcher, options = nil)
         @entity_store.delete_matched(matcher, options)
       end
-      
+
       def increment(name, amount = 1, options = nil)
         @entity_store.increment(name, amount, options)
       end
-      
+
       def decrement(name, amount = 1, options = nil)
         @entity_store.decrement(name, amount, options)
       end
-      
+
       def cleanup(options = nil)
         @entity_store.cleanup(options)
       end
-      
+
       def clear(options = nil)
         @entity_store.clear(options)
       end
-      
+
       protected
-      
+
       def read_entry(key, options)
         entry = @entity_store.send(:read_entry, key, options)
         if entry.respond_to?(:depends) && entry.depends && !entry.depends.empty?
@@ -146,7 +146,7 @@ module ActiveSupport
         end
         entry
       end
-      
+
       def write_entry(key, entry, options)
         depends = (options.delete(:depends) || []).uniq
         unless depends.empty?
@@ -155,21 +155,21 @@ module ActiveSupport
         end
         @entity_store.send(:write_entry, key, entry, options)
       end
-      
+
       def delete_entry(key, options)
         @entity_store.send(:delete_entry, key, options)
       end
-      
+
       private
-      
+
       def namespaced_key(key, options)
         key = expanded_key(key)
         namespace = @entity_store.options[:namespace] if @entity_store.options
         prefix = namespace.is_a?(Proc) ? namespace.call : namespace
         key = "#{prefix}:#{key}" if prefix
-        key    
+        key
       end
-      
+
       def expanded_tag(tag)
         if tag.respond_to?(:cache_tag)
           tag = tag.cache_tag.to_s
