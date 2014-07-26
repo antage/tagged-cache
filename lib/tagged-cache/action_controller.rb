@@ -10,7 +10,7 @@ module ActionController
                   else
                     depends
                   end
-        _save_fragment_without_options_processing(name, options.merge(:depends => depends))
+        _save_fragment_without_options_processing(name, options.merge(depends: depends))
       end
 
       alias_method_chain :_save_fragment, :options_processing

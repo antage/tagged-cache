@@ -48,10 +48,10 @@ module ActiveSupport
       def read_tag(key)
         instrument(:read_tag, key) do
           key = expanded_tag(key)
-          tag_value = @tag_store.read(key, :raw => true)
+          tag_value = @tag_store.read(key, raw: true)
           if tag_value.nil? || tag_value.to_i.zero?
             new_value = Time.now.to_i
-            @tag_store.write(key, new_value, :raw => true)
+            @tag_store.write(key, new_value, raw: true)
             new_value
           else
             tag_value.to_i
@@ -63,7 +63,7 @@ module ActiveSupport
         instrument(:read_tags, keys) do
           options = keys.extract_options!
           keys = keys.map { |k| expanded_tag(k) }
-          tags = @tag_store.read_multi(*(keys + [options.merge(:raw => true)]))
+          tags = @tag_store.read_multi(*(keys + [options.merge(raw: true)]))
           (keys - tags.keys).each do |unknown_tag|
             tags[unknown_tag] = read_tag(unknown_tag)
           end
@@ -74,7 +74,7 @@ module ActiveSupport
       def touch_tag(key)
         instrument(:touch_tag, key) do
           key = expanded_tag(key)
-          @tag_store.increment(key) || @tag_store.write(key, Time.now.to_i, :raw => true)
+          @tag_store.increment(key) || @tag_store.write(key, Time.now.to_i, raw: true)
         end
       end
 
@@ -92,7 +92,7 @@ module ActiveSupport
             race_ttl = options[:race_condition_ttl].to_f
             if race_ttl and Time.now.to_f - entry.expires_at <= race_ttl
               entry.expires_at = Time.now + race_ttl
-              write_entry(key, entry, :expires_in => race_ttl * 2)
+              write_entry(key, entry, expires_in: race_ttl * 2)
             else
               delete_entry(key, options)
             end
@@ -107,7 +107,7 @@ module ActiveSupport
             result = instrument(:generate, name, options) do |payload|
               yield(dependencies)
             end
-            write(name, result, options.merge(:depends => dependencies.tags))
+            write(name, result, options.merge(depends: dependencies.tags))
             result
           end
         else

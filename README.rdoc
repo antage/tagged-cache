@@ -13,8 +13,8 @@ ActiveSupport cache adapter with tagged dependencies.
   require 'active_support'
 
   cache = ActiveSupport::Cache.lookup_store(:tagged_store,
-    :tag_store => [:memory_store, :namespace => "tags"],
-    :entity_store => [:memory_store, :namespace => "entities"]
+    tag_store: [:memory_store, namespace: "tags"],
+    entity_store: [:memory_store, namespace: "entities"]
   )
 
   # tags management
@@ -23,8 +23,8 @@ ActiveSupport cache adapter with tagged dependencies.
   cache.touch_tag("tag1") # increment tag1's version
 
   # reading and writing cache
-  cache.write("cache key", value, :depends => ["tag1", "tag2"])
-  cache.fetch("cache key", :depends => ["tag1", "tag2]) { value }
+  cache.write("cache key", value, depends: ["tag1", "tag2"])
+  cache.fetch("cache key", depends: ["tag1", "tag2]) { value }
 
   # or
 
@@ -63,14 +63,14 @@ ActiveSupport cache adapter with tagged dependencies.
   # config/environments/production.rb:
   Rails3::Application.configure do
   ...
-    config.cache_store = :tagged_store, { :tag_store => [:mem_cache_store, %w(localhost), { :namespace => "tags" }], :entity_store => [:mem_cache_store, %w(localhost), { :namespace => "entities" }] }
+    config.cache_store = :tagged_store, { tag_store: [:mem_cache_store, %w(localhost), { namespace: "tags" }], entity_store: [:mem_cache_store, %w(localhost), { namespace: "entities" }] }
   ...
   end
 
   # app/controller/samples_controller.rb:
   class SamplesController < ApplicationController
     # specify :depends using lambda
-    caches_action :show, :depends => lambda { |c|
+    caches_action :show, depends: ->(c) {
       c.instance_eval do
         # @sample must respond to #cache_tag method
         [@sample]
@@ -78,7 +78,7 @@ ActiveSupport cache adapter with tagged dependencies.
     }
 
     # specify :depends using method name
-    caches_action :index, :depends => :index_tags
+    caches_action :index, depends: :index_tags
 
     def index
       @samples = Sample.all
@@ -108,7 +108,7 @@ ActiveSupport cache adapter with tagged dependencies.
 
 (The MIT License)
 
-Copyright (c) 2010 Anton Ageev
+Copyright (c) 2010-2014 Anton Ageev
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
